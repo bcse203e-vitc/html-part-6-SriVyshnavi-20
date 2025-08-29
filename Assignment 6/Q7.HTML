@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Date Format Validation</title>
+<style>
+  .error { color: red; }
+</style>
+</head>
+<body>
+
+<h2>Date Format Validation (DD/MM/YYYY)</h2>
+<form id="dateForm">
+  <label>Date:</label>
+  <input type="text" id="date" placeholder="DD/MM/YYYY" />
+  <div id="dateError" class="error"></div>
+  <button type="submit">Submit</button>
+</form>
+
+<script>
+  const dateInput = document.getElementById('date');
+  const dateError = document.getElementById('dateError');
+  const dateForm = document.getElementById('dateForm');
+  const dateRegex = /^\d{2}\/\d{2}\/\d{4}$/;
+
+  dateForm.addEventListener('submit', e => {
+    if(!dateRegex.test(dateInput.value)) {
+      e.preventDefault();
+      dateError.textContent = 'Date must be in DD/MM/YYYY format';
+    } else {
+      dateError.textContent = '';
+      alert('Form submitted!');
+    }
+  });
+</script>
+
+</body>
+</html>

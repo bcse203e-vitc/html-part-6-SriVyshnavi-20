@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Phone Number Validation</title>
+<style>
+  .error { color: red; }
+</style>
+</head>
+<body>
+
+<h2>Phone Number Validation (US Format)</h2>
+<label for="phone">Phone Number:</label>
+<input type="text" id="phone" placeholder="(123) 456-7890 or 123-456-7890" />
+<div id="phoneError" class="error"></div>
+
+<script>
+  const phoneInput = document.getElementById('phone');
+  const phoneError = document.getElementById('phoneError');
+  const phoneRegex = /^(\(\d{3}\)\s?\d{3}-\d{4}|\d{3}-\d{3}-\d{4})$/;
+
+  phoneInput.addEventListener('input', () => {
+    const val = phoneInput.value.trim();
+    if(val === '') {
+      phoneError.textContent = '';
+      return;
+    }
+    if(phoneRegex.test(val)) {
+      phoneError.textContent = '';
+    } else {
+      phoneError.textContent = 'Invalid phone number format';
+    }
+  });
+</script>
+
+</body>
+</html>

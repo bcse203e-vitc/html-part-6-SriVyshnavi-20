@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Dynamic Hobbies Input</title>
+<style>
+  .error { color: red; }
+</style>
+</head>
+<body>
+
+<h2>Hobbies Form</h2>
+<form id="hobbiesForm">
+  <div id="hobbiesContainer">
+    <label>Hobby 1:</label>
+    <input type="text" class="hobby" />
+    <span class="error hobbyError"></span><br/>
+  </div>
+  <button id="addHobbyBtn">Add Hobby</button>
+  <br/>
+  <button type="submit">Submit</button>
+</form>
+
+<script>
+  const hobbiesContainer = document.getElementById('hobbiesContainer');
+  const addHobbyBtn = document.getElementById('addHobbyBtn');
+  const hobbyRegex = /^[A-Za-z\s]+$/;
+
+  function validateHobby(input, errorSpan) {
+    if(input.value.trim() === '') {
+      errorSpan.textContent = 'Hobby cannot be empty';
+      return false;
+    }
+    if(!hobbyRegex.test(input.value)) {
+      errorSpan.textContent = 'Only alphabets and spaces allowed';
+      return false;
+    }
+    errorSpan.textContent = '';
+    return true;
+  }
+
+  hobbiesContainer.addEventListener('input', e => {
+    if(e.target.classList.contains('hobby')) {
+      const errorSpan = e.target.nextElementSibling;
+      validateHobby(e.target, errorSpan);
+    }
+  });
+
+  addHobbyBtn.addEventListener('click', e => {
+    e.preventDefault();
+    const count = hobbiesContainer.querySelectorAll('.hobby').length + 1;
+    const label = document.createElement('label');
+    label.textContent = `Hobby ${count}:`;
+    const input = document.createElement('input');
+    input.type = 'text';
+    input.className = 'hobby';
+    const errorSpan = document.createElement('span');
+    errorSpan.className = 'error hobbyError';
+
+    hobbiesContainer.appendChild(label);
+    hobbiesContainer.appendChild(input);
+    hobbiesContainer.appendChild(errorSpan);
+    hobbiesContainer.appendChild(document.createElement('br'));
+  });
+
+  document.getElementById('hobbiesForm').addEventListener('submit', e => {
+    e.preventDefault();
+    const hobbyInputs = hobbiesContainer.querySelectorAll('.hobby');
+    let allValid = true;
+    hobbyInputs.forEach(input => {
+      const errorSpan = input.nextElementSibling;
+      if(!validateHobby(input, errorSpan)) {
+        allValid = false;
+      }
+    });
+    if(allValid) {
+      alert('Form submitted!');
+    } else {
+      alert('Please fix errors.');
+    }
+  });
+</script>
+
+</body>
+</html>

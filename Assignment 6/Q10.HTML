@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Dynamic Form Builder</title>
+</head>
+<body>
+
+  <h2>Dynamic Form Builder</h2>
+
+  <div>
+    <label for="inputType">Select input type:</label>
+    <select id="inputType">
+      <option value="text">Text</option>
+      <option value="email">Email</option>
+      <option value="password">Password</option>
+    </select>
+    <button id="addInputBtn">Add</button>
+  </div>
+
+  <form id="dynamicForm">
+    <button type="submit">Submit</button>
+  </form>
+
+  <div id="formMessage"></div>
+
+  <script>
+    const inputTypeSelect = document.getElementById('inputType');
+    const addInputBtn = document.getElementById('addInputBtn');
+    const dynamicForm = document.getElementById('dynamicForm');
+    const formMessage = document.getElementById('formMessage');
+
+    let inputCount = 0;
+
+    const regexPatterns = {
+      text: /^[a-zA-Z\s]{2,50}$/,
+      email: /^[a-zA-Z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$/,
+      password: /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,}$/
+    };
+
+    addInputBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      const selectedType = inputTypeSelect.value;
+      inputCount++;
+
+      const wrapper = document.createElement('div');
+      wrapper.id = `input-group-${inputCount}`;
+
+      const label = document.createElement('label');
+      label.htmlFor = `dynamicInput${inputCount}`;
+      label.textContent = `Input ${inputCount} (${selectedType}):`;
+
+      const input = document.createElement('input');
+      input.type = selectedType;
+      input.id = `dynamicInput${inputCount}`;
+      input.name = `dynamicInput${inputCount}`;
+      input.setAttribute('data-type', selectedType);
+      input.required = true;
+
+      const errorMsg = document.createElement('div');
+      errorMsg.id = `error-${inputCount}`;
+
+      wrapper.appendChild(label);
+      wrapper.appendChild(input);
+      wrapper.appendChild(errorMsg);
+
+      dynamicForm.insertBefore(wrapper, dynamicForm.lastElementChild);
+    });
+
+    dynamicForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      formMessage.textContent = '';
+
+      let isValid = true;
+
+      for(let i = 1; i <= inputCount; i++) {
+        const input = document.getElementById(`dynamicInput${i}`);
+        const errorDiv = document.getElementById(`error-${i}`);
+
+        if (!input) continue;
+
+        const type = input.getAttribute('data-type');
+        const val = input.value.trim();
+
+        if (!val) {
+          errorDiv.textContent = 'This field is required.';
+          isValid = false;
+          continue;
+        }
+
+        if (!regexPatterns[type].test(val)) {
+          if(type === 'text') {
+            errorDiv.textContent = 'Text should be 2-50 alphabetic characters.';
+          } else if(type === 'email') {
+            errorDiv.textContent = 'Please enter a valid email address.';
+          } else if(type === 'password') {
+            errorDiv.textContent = 'Password must be at least 6 characters, including letters and numbers.';
+          }
+          isValid = false;
+        } else {
+          errorDiv.textContent = '';
+        }
+      }
+
+      if (isValid) {
+        formMessage.textContent = 'Form submitted successfully!';
+
+        dynamicForm.reset();
+        for(let i = inputCount; i >= 1; i--) {
+          const group = document.getElementById(`input-group-${i}`);
+          if(group) group.remove();
+        }
+        inputCount = 0;
+      }
+    });
+  </script>
+
+</body>
+</html>

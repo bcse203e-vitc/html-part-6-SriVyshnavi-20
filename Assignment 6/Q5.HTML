@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Password Matching</title>
+<style>
+  .error { color: red; }
+  .success { color: green; }
+</style>
+</head>
+<body>
+
+<h2>Password Match Check</h2>
+<label>Password:</label>
+<input type="password" id="password" /><br/>
+<label>Confirm Password:</label>
+<input type="password" id="confirmPassword" /><br/>
+<div id="message"></div>
+
+<script>
+  const pw = document.getElementById('password');
+  const confirmPw = document.getElementById('confirmPassword');
+  const message = document.getElementById('message');
+
+  function checkMatch() {
+    if(pw.value === '' && confirmPw.value === '') {
+      message.textContent = '';
+      return;
+    }
+    if(pw.value === confirmPw.value) {
+      message.textContent = 'Passwords match';
+      message.className = 'success';
+    } else {
+      message.textContent = 'Passwords do not match';
+      message.className = 'error';
+    }
+  }
+
+  pw.addEventListener('input', checkMatch);
+  confirmPw.addEventListener('input', checkMatch);
+</script>
+
+</body>
+</html>
